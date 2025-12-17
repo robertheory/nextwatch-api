@@ -1,5 +1,5 @@
-@baseUrl = http://localhost:3000
-@showId = 101
+@baseUrl = http://localhost:3333
+@showId = 169
 
 ### Create show
 POST {{baseUrl}}/shows
