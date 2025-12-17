@@ -1,0 +1,31 @@
+@baseUrl = http://localhost:3000
+@showId = 101
+
+### Create show
+POST {{baseUrl}}/shows
+Content-Type: application/json
+
+{
+	"showId": {{showId}},
+	"status": "NOT_STARTED"
+}
+
+### List shows
+GET {{baseUrl}}/shows
+
+### List shows filtered by status
+GET {{baseUrl}}/shows?status=FINISHED
+
+### Retrieve show by id
+GET {{baseUrl}}/shows/{{showId}}
+
+### Update show status
+PATCH {{baseUrl}}/shows/{{showId}}
+Content-Type: application/json
+
+{
+	"status": "FINISHED"
+}
+
+### Remove show
+DELETE {{baseUrl}}/shows/{{showId}}
