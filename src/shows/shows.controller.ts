@@ -1,0 +1,46 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { CreateShowDto } from './dto/create-show.dto';
+import { UpdateShowDto } from './dto/update-show.dto';
+import { ShowsService } from './shows.service';
+
+@Controller('shows')
+export class ShowsController {
+  constructor(private readonly showsService: ShowsService) {}
+
+  @Post()
+  create(@Body() createShowDto: CreateShowDto) {
+    return this.showsService.create(createShowDto);
+  }
+
+  @Get()
+  findAll(@Query('status') status?: string) {
+    return this.showsService.findAll(status);
+  }
+
+  @Get(':showId')
+  findOne(@Param('showId') showId: number) {
+    return this.showsService.findOne(showId);
+  }
+
+  @Patch(':showId')
+  update(
+    @Param('showId') showId: number,
+    @Body() updateShowDto: UpdateShowDto,
+  ) {
+    return this.showsService.update(showId, updateShowDto);
+  }
+
+  @Delete(':showId')
+  remove(@Param('showId') showId: number) {
+    return this.showsService.remove(showId);
+  }
+}

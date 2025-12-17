@@ -4,9 +4,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { PrismaModule } from './prisma/prisma.module';
+import { ShowsModule } from './shows/shows.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
+    ShowsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
