@@ -33,11 +33,11 @@ model Show {
 }
 
 model WatchedEpisode {
-  id        Int      @id @default(autoincrement()) @db.Integer
-  showId    Int      @map("show_id") @db.Integer
-  episodeId Int      @map("episode_id") @db.Integer
-  watchedAt DateTime @default(now()) @map("watched_at") @db.Timestamp(6)
-  show      Show     @relation(fields: [showId], references: [showId], onDelete: Cascade)
+  id        Int       @id @default(autoincrement()) @db.Integer
+  showId    Int       @map("show_id") @db.Integer
+  episodeId Int       @unique @map("episode_id") @db.Integer
+  watchedAt DateTime? @map("watched_at") @db.Timestamp(6)
+  show      Show      @relation(fields: [showId], references: [showId], onDelete: Cascade)
 
   @@unique([showId, episodeId])
   @@map("watched_episodes")
