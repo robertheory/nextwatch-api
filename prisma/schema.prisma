@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ShowStatus {
+  NOT_STARTED
+  WATCHING
+  FINISHED
+}
+
+model Show {
+  id              Int              @id @default(autoincrement()) @db.Integer
+  showId          Int              @unique @map("show_id") @db.Integer
+  status          String           @db.Text
+  createdAt       DateTime         @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt       DateTime         @updatedAt @map("updated_at") @db.Timestamp(6)
+  watchedEpisodes WatchedEpisode[]
+
+  @@map("shows")
+}
+
+model WatchedEpisode {
+  id        Int      @id @default(autoincrement()) @db.Integer
+  showId    Int      @map("show_id") @db.Integer
+  episodeId Int      @map("episode_id") @db.Integer
+  watchedAt DateTime @default(now()) @map("watched_at") @db.Timestamp(6)
+  show      Show     @relation(fields: [showId], references: [showId], onDelete: Cascade)
+
+  @@unique([showId, episodeId])
+  @@map("watched_episodes")
+}
