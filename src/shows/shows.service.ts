@@ -12,7 +12,7 @@ export class ShowsService {
   async create(createShowDto: CreateShowDto) {
     const status =
       ShowStatus[createShowDto.status as keyof typeof ShowStatus] ||
-      ShowStatus.NOT_STARTED;
+      ShowStatus.UNTRACKED;
 
     const newShow = new Show({
       showId: createShowDto.showId,
@@ -65,7 +65,9 @@ export class ShowsService {
     });
 
     if (!show) {
-      throw new NotFoundException(`Show with ID ${showId} not found.`);
+      const createdShow = await this.create({ showId, status: 'UNTRACKED' });
+
+      return createdShow;
     }
 
     return show;
