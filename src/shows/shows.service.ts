@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ShowStatus } from 'generated/prisma/enums';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateShowDto } from './dto/create-show.dto';
@@ -12,7 +16,7 @@ export class ShowsService {
   async create(createShowDto: CreateShowDto) {
     const status =
       ShowStatus[createShowDto.status as keyof typeof ShowStatus] ||
-      ShowStatus.UNTRACKED;
+      ShowStatus.NOT_STARTED;
 
     const newShow = new Show({
       showId: createShowDto.showId,
@@ -24,12 +28,9 @@ export class ShowsService {
     });
 
     if (alreadyExists) {
-      const updatedShow = await this.prisma.show.update({
-        where: { showId: newShow.showId },
-        data: { status: newShow.status },
-      });
-
-      return updatedShow;
+      throw new BadRequestException(
+        `Show with ID ${newShow.showId} already exists.`,
+      );
     }
 
     const createdShow = await this.prisma.show.create({
@@ -65,9 +66,7 @@ export class ShowsService {
     });
 
     if (!show) {
-      const createdShow = await this.create({ showId, status: 'UNTRACKED' });
-
-      return createdShow;
+      throw new NotFoundException(`Show with ID ${showId} not found.`);
     }
 
     return show;
