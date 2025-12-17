@@ -18,6 +18,7 @@ enum ShowStatus {
   NOT_STARTED
   WATCHING
   FINISHED
+  UNTRACKED
 }
 
 model Show {
