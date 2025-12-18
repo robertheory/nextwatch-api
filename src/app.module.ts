@@ -5,12 +5,14 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { PrismaModule } from './prisma/prisma.module';
 import { ShowsModule } from './shows/shows.module';
+import { EpisodesModule } from './episodes/episodes.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     ShowsModule,
+    EpisodesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
