@@ -4,7 +4,7 @@ ENV NODE_ENV=development
 WORKDIR /usr/src/app
 
 RUN apt-get update \
-	&& apt-get install --no-install-recommends -y dumb-init openssl \
+	&& apt-get install --no-install-recommends -y dumb-init openssl curl ca-certificates \
 	&& rm -rf /var/lib/apt/lists/*
 
 FROM base AS deps
@@ -23,6 +23,9 @@ COPY . .
 # Copy entrypoint and ensure permissions
 COPY docker-entrypoint.sh /usr/src/app/docker-entrypoint.sh
 RUN chmod +x /usr/src/app/docker-entrypoint.sh
+# copy a stable entrypoint outside the app volume so mounts won't hide it
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 RUN groupadd -g 1001 nodeapp \
 	&& useradd -u 1001 -g nodeapp -m nodeapp \
@@ -30,8 +33,12 @@ RUN groupadd -g 1001 nodeapp \
 
 USER nodeapp
 
-ENTRYPOINT ["dumb-init", "/usr/src/app/docker-entrypoint.sh"]
+ENTRYPOINT ["dumb-init", "/usr/local/bin/docker-entrypoint.sh"]
 
 EXPOSE 3000
 
 CMD ["npm", "run", "start:dev"]
+
+# Healthcheck: probe the application /health endpoint
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+	CMD curl -f http://127.0.0.1:3000/health || exit 1

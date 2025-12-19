@@ -1,5 +1,5 @@
 services:
-  server:
+  nextwatch-api:
     build:
       context: .
       target: dev
@@ -10,8 +10,15 @@ services:
       - .env
     environment:
       - NODE_ENV=development
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:${POSTGRES_PORT}/${POSTGRES_DB}?schema=public
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://127.0.0.1:3333/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     ports:
-      - "3000:3000"
+      - "3333:3333"
     volumes:
       - .:/usr/src/app:cached
       - server_node_modules:/usr/src/app/node_modules
