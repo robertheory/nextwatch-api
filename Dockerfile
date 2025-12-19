@@ -20,7 +20,9 @@ COPY --from=deps /usr/src/app/node_modules ./node_modules
 
 COPY . .
 
-# RUN npx prisma generate
+# Copy entrypoint and ensure permissions
+COPY docker-entrypoint.sh /usr/src/app/docker-entrypoint.sh
+RUN chmod +x /usr/src/app/docker-entrypoint.sh
 
 RUN groupadd -g 1001 nodeapp \
 	&& useradd -u 1001 -g nodeapp -m nodeapp \
@@ -28,6 +30,8 @@ RUN groupadd -g 1001 nodeapp \
 
 USER nodeapp
 
+ENTRYPOINT ["dumb-init", "/usr/src/app/docker-entrypoint.sh"]
+
 EXPOSE 3000
 
-CMD ["dumb-init", "npm", "run", "start:dev"]
+CMD ["npm", "run", "start:dev"]
