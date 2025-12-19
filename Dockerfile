@@ -35,10 +35,10 @@ USER nodeapp
 
 ENTRYPOINT ["dumb-init", "/usr/local/bin/docker-entrypoint.sh"]
 
-EXPOSE 3000
+EXPOSE 3333
 
 CMD ["npm", "run", "start:dev"]
 
 # Healthcheck: probe the application /health endpoint
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-	CMD curl -f http://127.0.0.1:3000/health || exit 1
+	CMD curl -f http://127.0.0.1:3333/health || exit 1
