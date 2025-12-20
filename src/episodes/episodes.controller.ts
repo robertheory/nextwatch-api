@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { EpisodesService } from './episodes.service';
 
 @Controller('watched')
@@ -10,7 +10,7 @@ export class EpisodesController {
     return this.episodesService.findAll(+showId);
   }
 
-  @Patch(':showId/:episodeId')
+  @Post(':showId/:episodeId')
   markWatched(
     @Param('showId') showId: string,
     @Param('episodeId') episodeId: string,
