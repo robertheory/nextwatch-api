@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { CreateShowDto } from './dto/create-show.dto';
@@ -31,7 +31,7 @@ export class ShowsController {
     return this.showsService.findOne(showId);
   }
 
-  @Patch(':showId')
+  @Put(':showId')
   update(
     @Param('showId') showId: number,
     @Body() updateShowDto: UpdateShowDto,
