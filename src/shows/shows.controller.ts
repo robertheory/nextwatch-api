@@ -8,6 +8,7 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { CreateShowDto } from './dto/create-show.dto';
 import { UpdateShowDto } from './dto/update-show.dto';
 import { ShowsService } from './shows.service';
@@ -22,6 +23,7 @@ export class ShowsController {
   }
 
   @Get()
+  @ApiQuery({ name: 'status', required: false })
   findAll(@Query('status') status?: string) {
     return this.showsService.findAll(status);
   }
